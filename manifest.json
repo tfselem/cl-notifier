@@ -1,0 +1,19 @@
+{
+    "name": "Craigslist Shopper",
+    "version": "0",
+    "description": "Updates you on a craigslist search",
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
+    },
+    "page_action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "declarativeContent"
+    ],
+    "manifest_version": 2
+}
+

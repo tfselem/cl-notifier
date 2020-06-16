@@ -1,7 +1,9 @@
-# Craigslist Shopper
+# Craigslist & Facebook Marketplace Notifier
 
-A craigslist updater chrome extension.
-Just another change. Wait and here is another one.
+A simple Google Chrome extension that checks your 
+Craigslist and Facebook Marketplace searches
+for you and notifies you of any new posts so you don't
+miss out!
 
 By Thomas Selem.
 

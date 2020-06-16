@@ -5,5 +5,7 @@ Craigslist and Facebook Marketplace searches
 for you and notifies you of any new posts so you don't
 miss out!
 
-By Thomas Selem.
+Credits:
+Design: Thomas Selem, Juan Carlos Selem
+Development: Thomas Selem
 

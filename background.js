@@ -2,7 +2,7 @@
 /**
  * Rule for triggering the page action when the user in on
  * a craigslist search
- */
+ *
 var onSearchPageRule = {
     conditions: [
         new chrome.declarativeContent.PageStateMatcher({
@@ -18,5 +18,5 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
         chrome.declarativeContent.onPageChanged.addRules([onSearchPageRule]);
     });
-});
+});*/
 

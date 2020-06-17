@@ -8,8 +8,8 @@
         ],
         "persistent": false
     },
-    "page_action": {
-        "default_popup": "popup.html"
+    "browser_action": {
+        "default_popup": "clfb_popup.html"
     },
     "permissions": [
         "declarativeContent"

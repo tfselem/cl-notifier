@@ -5,8 +5,8 @@
     max-height: 400px;
 }
 
-.clfb_post div,
-.clfb_post img {
+#clfb_posts li div,
+#clfb_posts li img {
     display: inline-block;
 }
 

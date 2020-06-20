@@ -1,12 +1,12 @@
-#clfb_container {
+#container {
     display: block;
     width: 350px;
     height: auto;
     max-height: 400px;
 }
 
-#clfb_posts li div,
-#clfb_posts li img {
+#posts li div,
+#posts li img {
     display: inline-block;
 }
 

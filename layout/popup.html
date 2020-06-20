@@ -4,8 +4,8 @@
         <link type="text/css" rel="stylesheet" href="../style/style.css"/>
     </head>
     <body>
-        <div id="clfb_container">
-            <div id="clfb_no_saved_searches" hidden>
+        <div id="container">
+            <div id="no-saved-searches" hidden>
                 <p>
                     You have no saved searches! Search for items on Facebook
                     or Craigslist and try again.
@@ -14,33 +14,33 @@
                 <a href="http://facebook.com/marketplace">Facebook Markeplace</a>
             </div>
         </div>
-        <div id="clfb_categories" hidden>
+        <div id="categories" hidden>
             <p>Saved categories:</p>
-            <div class="clfb_category">
-                <button class="clfb_category_goto">Cool Car</button>
-                <button class="clfb_category_del">Remove category</button>
+            <div class="category">
+                <button class="category-goto">Cool Car</button>
+                <button class="category-del">Remove category</button>
             </div>
-            <div class="clfb_category">
-                <button class="clfb_category_goto">Computer parts</button>
-                <button class="clfb_category_del">Remove category</button>
+            <div class="category">
+                <button class="category-goto">Computer parts</button>
+                <button class="category-del">Remove category</button>
             </div>
         </div>
-        <div id="clfb_searches" >
-            <button id="clfb_back">Back to categories</button>
+        <div id="searches" >
+            <button id="back">Back to categories</button>
             <div id="filter">
                 <span>Showing</span>
-                <button id="clfb_show_all">All</button>
-                <button id="clfb_show_cl">Craigslist</button>
-                <button id="clfb_show_fb">Facebook Marketplace</button>
+                <button id="show-all">All</button>
+                <button id="show-cl">Craigslist</button>
+                <button id="show-fb">Facebook Marketplace</button>
             </div>
-            <ul id="clfb_posts">
+            <ul id="posts">
                 <li>
                     <img src="" height=50 width=50/>
                     <div>
                         <a href="">Title of Post</a>
                         <p>Some description of this post and...</p>
-                        <button class="clfb_goto_post">Go</button>
-                        <button class="clfb_clear_post">Clear</button>
+                        <button class="goto-post">Go</button>
+                        <button class="clear-post">Clear</button>
                     </div>
                 </li>
                 <li>
@@ -48,23 +48,24 @@
                     <div>
                         <a href="">Title of Post</a>
                         <p>Some description of this post and...</p>
-                        <button class="clfb_goto_post">Go</button>
-                        <button class="clfb_clear_post">Clear</button>
+                        <button class="goto-post">Go</button>
+                        <button class="clear-post">Clear</button>
                     </div>
                 </li>
-                <li class="clfb_post">
+                <li class="post">
                     <img src="" height=50 width=50/>
                     <div>
                         <a href="">Title of Post</a>
                         <p>Some description of this post and...</p>
-                        <button class="clfb_goto_post">Go</button>
-                        <button class="clfb_clear_post">Clear</button>
+                        <button class="goto-post">Go</button>
+                        <button class="clear-post">Clear</button>
                     </div>
                 </li>
             </ul>
         </div>
         <div>
-            <button id="clfb_save_search">Save this search!</button>
+            <p id="invalid-url">Go to </p>
+            <button id="save-search">Save this search!</button>
         </div>
     </body>
 </html>

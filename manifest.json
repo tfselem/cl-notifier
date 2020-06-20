@@ -14,6 +14,7 @@
     "permissions": [
         "declarativeContent",
         "tabs",
+        "activeTab",
         "storage"
     ],
     "manifest_version": 2

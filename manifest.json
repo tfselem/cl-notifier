@@ -12,10 +12,7 @@
         "default_popup": "layout/popup.html"
     },
     "permissions": [
-        "declarativeContent",
-        "tabs",
-        "activeTab",
-        "storage"
+        "activeTab"
     ],
     "manifest_version": 2
 }

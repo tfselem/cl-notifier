@@ -20,3 +20,16 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });*/
 
+/*chrome.browserAction.onClicked.addListener(function() {
+
+    console.log("Test");
+
+    chrome.browserAction.setPopup({
+        popup: "../layout/popup.html"
+    }, function(tab) {
+        console.log(tab);
+    });
+
+    chrome.browserAction.enable();
+});*/
+

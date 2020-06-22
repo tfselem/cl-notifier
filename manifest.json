@@ -13,7 +13,6 @@
     },
     "permissions": [
         "activeTab",
-        "declarativeContent",
         "http://*.craigslist.org/",
         "https://*.craigslist.org/"
     ],

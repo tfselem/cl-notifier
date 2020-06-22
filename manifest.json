@@ -12,7 +12,10 @@
         "default_popup": "layout/popup.html"
     },
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "declarativeContent",
+        "http://*.craigslist.org/",
+        "https://*.craigslist.org/"
     ],
     "manifest_version": 2
 }

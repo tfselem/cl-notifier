@@ -1,6 +1,3 @@
-let saveSearchButton = document.getElementById("save-search");
-console.log(saveSearchButton);
-
 /**
  * Ensures acceptable URL of search for 
  * 'save search' functionality
@@ -12,15 +9,19 @@ chrome.tabs.query({
     status: "complete" 
 }, function(tabs) {
     if (tabs[0]) {
-        // inject code 
-        chrome.tabs.sendMessage(tabs[0].id, {
-            type: "validUrl",
-            site: "craigslist"
-        }, function(res) {
-            if (res.isValidUrl === true) {
-                // enable save search button
-                console.log("valid url");
-            }
+        chrome.tabs.executeScript({
+            file: "scripts/content/valid-dom.js"
+        }, function() {
+            console.log();
+            chrome.tabs.sendMessage(tabs[0].id, {
+                type: "validUrl",
+                site: "cl"
+            }, function(res) {
+                if (res && res.valid === true) {
+                    // enable save search button
+                    console.log("valid url");
+                }
+            });
         });
     }
 });

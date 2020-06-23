@@ -11,8 +11,19 @@
     "browser_action": {
         "default_popup": "layout/popup.html"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*.craigslist.org/*",
+                "https://*.craigslist.org/*"
+            ],
+            "js": [
+                "scripts/content/valid-dom.js"
+            ]
+        }
+    ],
     "permissions": [
-        "activeTab",
+        "tabs",
         "http://*.craigslist.org/",
         "https://*.craigslist.org/"
     ],

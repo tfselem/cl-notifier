@@ -1,35 +1,20 @@
 
-/**
- * Rule for triggering the page action when the user in on
- * a craigslist search
- *
-var onSearchPageRule = {
-    conditions: [
-        new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {urlContains: "craigslist.org"},
-            css: ["ul.rows"]
-        })
-    ],
-    actions: [new chrome.declarativeContent.ShowPageAction()]
-};
-
+/* execute scripts/content/valid-dom.js on currently
+ * open tabs during install */
 chrome.runtime.onInstalled.addListener(function() {
-    console.log("Mothefucka!");
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-        chrome.declarativeContent.onPageChanged.addRules([onSearchPageRule]);
+    console.log("CL Installed");
+    chrome.tabs.query({
+        url: [
+            "*://*.craigslist.org/*"
+        ],
+        status: "complete" 
+    }, function(tabs) {
+        for (let i = 0; i < tabs.length; i++) {
+            console.log(tabs[i]);
+            chrome.tabs.executeScript(tabs[i].id, {
+                file: "scripts/content/valid-dom.js"
+            });
+        }
     });
-});*/
-
-/*chrome.browserAction.onClicked.addListener(function() {
-
-    console.log("Test");
-
-    chrome.browserAction.setPopup({
-        popup: "../layout/popup.html"
-    }, function(tab) {
-        console.log(tab);
-    });
-
-    chrome.browserAction.enable();
-});*/
+});
 

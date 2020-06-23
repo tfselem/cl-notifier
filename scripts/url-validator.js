@@ -1,3 +1,6 @@
+var saveSearch = document.querySelector("#save-search"),
+    saveSearchWrapper = document.querySelector("#save-search-wrapper"),
+    invalidUrlWrapper = document.querySelector("#invalid-url-wrapper");
 
 /**
  * Ensures acceptable URL of search for 
@@ -14,12 +17,15 @@ chrome.tabs.query({
             type: "validDom",
             site: "cl"
         }, function(res) {
-            if (res && res.valid === true) {
-                console.log("valid url");
-            } else {
-                console.log("invalid url");
+            if (res && res.valid) {
+                invalidUrlWrapper.setAttribute("hidden", "");
+                saveSearch.removeAttribute("hidden");
+                saveSearch.setAttribute("data-searchUrl", res.href);
             }
         });
+    } else {
+        saveSearch.setAttribute("hidden", "");
+        invalidUrlWrapper.removeAttribute("hidden");
     }
 });
 

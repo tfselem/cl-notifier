@@ -1,10 +1,9 @@
-
 var notifier = {
-    button: {
-        saveSearch: document.getElementById("save-search")
+    popup: {
+        saveSearchButton: document.querySelector("#save-search"),
+        invalidUrlWrapper: document.querySelector("#invalid-url-wrapper")
     },
-    /* URLs that notifier works on */
-    validUrl: {
+    validUrl: { /* URL matches that notifier works on */
         craigslist: "*://*.craigslist.org/*",
         facebook: "",
         ebay: ""

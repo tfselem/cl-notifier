@@ -1,15 +1,11 @@
-var saveSearch = document.querySelector("#save-search"),
-    saveSearchWrapper = document.querySelector("#save-search-wrapper"),
-    invalidUrlWrapper = document.querySelector("#invalid-url-wrapper");
 
-/**
- * Ensures acceptable URL of search for 
- * 'save search' functionality
- * */
+/* Craigslist URL and DOM validation:
+ * Disables/enables #save-search button based on 
+ * url and DOM properties of active tab */
 chrome.tabs.query({
     active: true,
     currentWindow: true,
-    url: notifier.validUrl.craigslist,
+    url: "*://*.craigslist.org/*",
     status: "complete" 
 }, function(tabs) {
     if (tabs[0]) {
@@ -18,14 +14,16 @@ chrome.tabs.query({
             site: "cl"
         }, function(res) {
             if (res && res.valid) {
-                invalidUrlWrapper.setAttribute("hidden", "");
-                saveSearch.removeAttribute("hidden");
-                saveSearch.setAttribute("data-searchUrl", res.href);
+                notifier.popup.invalidUrlWrapper.setAttribute("hidden", "");
+                notifier.popup.saveSearchButton.removeAttribute("hidden");
+                notifier.popup.saveSearchButton.setAttribute(
+                    "data-searchUrl", 
+                    res.href
+                );
             }
         });
     } else {
-        saveSearch.setAttribute("hidden", "");
-        invalidUrlWrapper.removeAttribute("hidden");
+        notifier.popup.invalidUrlWrapper.removeAttribute("hidden");
     }
 });
 

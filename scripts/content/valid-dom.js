@@ -7,7 +7,8 @@
 function clResponse() {
     let response = {
             valid: false,
-            href: null
+            href: null,
+            defaultTitle: document.querySelector("title").innerText
         },
         searchSortAnchors = document.querySelectorAll(
             "div.search-sort ul.dropdown-list li a"

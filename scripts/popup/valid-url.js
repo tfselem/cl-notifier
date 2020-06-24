@@ -16,9 +16,15 @@ chrome.tabs.query({
             if (res && res.valid) {
                 notifier.popup.invalidUrlWrapper.setAttribute("hidden", "");
                 notifier.popup.saveSearchButton.removeAttribute("hidden");
+
                 notifier.popup.saveSearchButton.setAttribute(
-                    "data-searchUrl", 
+                    "data-searchurl", 
                     res.href
+                );
+
+                notifier.popup.saveSearchButton.setAttribute(
+                    "data-defaulttitle", 
+                    res.defaultTitle
                 );
             }
         });

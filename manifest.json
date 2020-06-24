@@ -24,6 +24,7 @@
     ],
     "permissions": [
         "tabs",
+        "storage",
         "http://*.craigslist.org/",
         "https://*.craigslist.org/"
     ],

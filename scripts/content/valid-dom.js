@@ -6,21 +6,20 @@
  */
 function clResponse() {
     let response = {
-            valid: false,
-            href: null,
-            defaultTitle: document.querySelector("title").innerText
-        },
-        searchSortAnchors = document.querySelectorAll(
-            "div.search-sort ul.dropdown-list li a"
-        );
-    if (searchSortAnchors) {
-        for (var i = 0; i < searchSortAnchors.length; i++) {
-            if (searchSortAnchors[i].dataset.selection === "date") {
-                response.valid = true;
-                response.href = window.origin + 
-                                searchSortAnchors[i].getAttribute("href");
-            }
-        }
+        valid: false,
+        href: null,
+        defaultTitle: document.querySelector("title").innerText
+    },
+    searchSortAnchor = document.querySelector(
+        "div.search-sort ul.dropdown-list li a[data-selection='date']"
+    );
+
+    if (!searchSortAnchor) { return response; }
+    response.valid = true;
+    response.href = window.origin + 
+                    searchSortAnchor.getAttribute("href");
+    if (searchSortAnchor.parentNode.classList.contains("sel")) {
+        // get newest post's date and save it in response
     }
     return response;
 }

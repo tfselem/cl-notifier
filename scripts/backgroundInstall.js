@@ -1,8 +1,6 @@
-
 /* execute scripts/content/valid-dom.js on currently
  * open tabs during install */
 chrome.runtime.onInstalled.addListener(function() {
-    console.log("CL Installed");
     chrome.tabs.query({
         url: [
             "*://*.craigslist.org/*"
@@ -15,6 +13,10 @@ chrome.runtime.onInstalled.addListener(function() {
                 file: "scripts/content/valid-dom.js"
             });
         }
+    });
+
+    chrome.storage.sync.set({savedSearches: []}, function() {
+        console.log("savedSearches");
     });
 });
 

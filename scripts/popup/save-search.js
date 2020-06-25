@@ -3,7 +3,8 @@ notifier.popup.saveSearchButton.addEventListener("click", function(e) {
         url: notifier.popup.saveSearchButton.dataset.searchurl,
         title: notifier.popup.saveSearchButton.dataset.defaulttitle,
         posts: [],
-        newestPostTime: (new Date()).getTime()
+        newestPostTime: (new Date()).getTime(),
+        type: "cl"
     };
 
     chrome.storage.sync.get(["savedSearches"], function(res) {

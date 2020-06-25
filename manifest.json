@@ -4,7 +4,8 @@
     "description": "Updates you on Craigslist and FB Marketplace searches.",
     "background": {
         "scripts": [
-            "scripts/background.js"
+            "scripts/backgroundInstall.js",
+            "scripts/backgroundInterval.js"
         ],
         "persistent": false
     },

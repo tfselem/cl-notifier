@@ -8,15 +8,10 @@ chrome.runtime.onInstalled.addListener(function() {
         status: "complete" 
     }, function(tabs) {
         for (let i = 0; i < tabs.length; i++) {
-            console.log(tabs[i]);
             chrome.tabs.executeScript(tabs[i].id, {
                 file: "scripts/content/valid-dom.js"
             });
         }
-    });
-
-    chrome.storage.sync.set({savedSearches: []}, function() {
-        console.log("savedSearches");
     });
 });
 

@@ -79,7 +79,7 @@ function ClPage(doc) {
             if (this.resultsRows.children[i].tagName === "H4") {
                 break;
             }
-            localResults.push(new ClResult(this.resultsRows.children[i]));
+            localResults.push((new ClResult(this.resultsRows.children[i])).toObject());
         }
         return localResults;
     }
@@ -101,55 +101,49 @@ function ClPage(doc) {
     }
 }
 
-ClPage.setXhrListener = function(xhr, interval, isLastIndex) {
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                /* DO STUFF */
-                let page = new ClPage(xhr.response);
-                console.log(page.getResultsAfterDate(Date.clParse("2020-06-03 12:00")));
-                /* /DO STUFF */
-            } else {
-                console.log(xhr);
-            }
-
-            if (isLastIndex) { 
-                setTimeout(updateClSearch, interval);
-            }
-        }
-    }
-}
-
-function getClXHR(xhr, interval, isLastIndex) {
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            /* DO STUFF */
-            let page = new ClPage(xhr.response);
-            console.log(page.getResultsAfterDate(Date.clParse("2020-06-03 12:00")));
-            /* /DO STUFF */
-        }
-    }
-}
-
 function updateClSearch() {
     const interval = 10000;
-    chrome.storage.sync.get("savedSearches", function(res) {
+    chrome.storage.sync.get(null, function(res) {
+        console.log(res);
+
         if (res.savedSearches.length === 0) {
             setTimeout(updateClSearch, interval);
-            console.log("No saved searches");
         }
 
-        for (var i = 0; i < res.savedSearches.length; i++) {
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", res.savedSearches[i].url, true);
+        for (let i = 0; i < res.savedSearches.length; i++) {
+            let xhr = new XMLHttpRequest(),
+                savedSearch = res.savedSearches[i];
+
+            xhr.open("GET", savedSearch.url, true);
             xhr.responseType = "document";
-            ClPage.setXhrListener(xhr, interval, i === res.savedSearches.length-1);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        let page = new ClPage(xhr.response),
+                            results = {};
+                        results[savedSearch.url] = page.getResultsAfterDate(
+                            Date.clParse("2020-06-24 12:00")
+                        );
+                        chrome.storage.sync.set(results);
+                    }
+
+                    if (i === res.savedSearches.length-1) { 
+                        setTimeout(updateClSearch, interval);
+                    }
+                }
+            }
+
             xhr.send();
         }
 
     });
 }
 
-chrome.runtime.onInstalled.addListener(updateClSearch);
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.storage.sync.clear(function() {
+        chrome.storage.sync.set({savedSearches: []}, updateClSearch);
+    });
+});
+
 chrome.runtime.onStartup.addListener(updateClSearch);
 

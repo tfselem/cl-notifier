@@ -2,7 +2,7 @@
  *  Returns Date object from craigslist format
  *  post date
  */
-Date.ClParse = function(str) {
+Date.clParse = function(str) {
     if (str === null || str === undefined) {
         throw "null parameter";
     }

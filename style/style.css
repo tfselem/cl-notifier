@@ -10,18 +10,3 @@
     display: inline-block;
 }
 
-.hidden {
-    display: none;
-}
-
-.loading-gif {
-    background-image: url("../img/loading.gif");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 50px;
-}
-
-#save-search-wrapper {
-    min-height: 100px;
-}
-

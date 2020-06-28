@@ -10,8 +10,15 @@ notifier.popup.saveSearchButton.addEventListener("click", function(e) {
         type: "cl"
     };
 
-    chrome.storage.sync.set(newSearch, function() {
-        console.log("SAVED");
-    });
+
+    chrome.storage.sync.get("savedSearches", function(res) {
+        if (res.savedSearches.indexOf(url) === -1) {
+            res.savedSearches.push(url);
+            newSearch.savedSearches = res.savedSearches;
+            chrome.storage.sync.set(newSearch, function() {
+                console.log("SAVED");
+            });
+        }
+    })
 });
 

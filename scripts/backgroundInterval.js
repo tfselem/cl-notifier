@@ -19,7 +19,6 @@ function ClResult(liResult) {
         this.url = null;
         this.price = null;
     }
-
     this.toObject = function() {
         return {
             id: this.id,
@@ -101,7 +100,7 @@ function ClPage(doc) {
     }
 }
 
-function updateClSearch() {
+/*function updateClSearch() {
     const interval = 5000;
     chrome.storage.sync.get(null, function(res) {
         let resLength = Object.keys(res).length,
@@ -149,12 +148,69 @@ function updateClSearch() {
         }
 
     });
+}*/
+
+function updateClSearch() {
+    const interval = 10000;
+
+    chrome.storage.sync.get("savedSearches", function(res) {
+        let updatedSearches = [],
+            index = 0,
+            indexMax = res.savedSearches.length;
+
+        if (indexMax === 0) {
+            console.log("No saved searches");
+            setTimeout(updateClSearch, interval);
+            return;
+        }
+
+        (function() {
+            if (index === indexMax) {
+                setTimeout(updateClSearch, interval);
+                return;
+            }
+
+            let recursiveFunc = arguments.callee,
+                url = res.savedSearches[index];
+
+            chrome.storage.sync.get(url, function(res1) {
+                let xhr = new XMLHttpRequest();
+                xhr.responseType = "document";
+                xhr.open("GET", url, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        let page = new ClPage(xhr.response),
+                            newestResultTime = page.getNewestResultDate().getTime(),
+                            currentResultTime = new Date();
+                            currentResultTime.setTime(res1[url].newestResultTime);
+
+                        if (currentResultTime < newestResultTime) {
+                            res1[url].newestResultTime = newestResultTime;
+                            res1[url].newResults = page.getResultsAfterDate(currentResultTime).concat(
+                                res1[url].newResults
+                            );
+                            res1[url].newResults.splice(30, res1[url].newResults.length-30);
+                        }
+
+                        chrome.storage.sync.set(res1, function() {
+                            console.log(res1);
+                            index++;
+                            recursiveFunc();
+                        });
+                    }
+                }
+                xhr.send();
+            });
+
+        })();
+    });
 }
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.clear(function() {
-        updateClSearch();
-        //chrome.storage.sync.set({savedSearches: []}, updateClSearch);
+        chrome.storage.sync.set({savedSearches: []}, function() {
+            updateClSearch();
+        });
     });
 });
 

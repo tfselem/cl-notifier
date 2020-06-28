@@ -1,17 +1,16 @@
 notifier.popup.saveSearchButton.addEventListener("click", function(e) {
-    let newSearch = {
-        url: notifier.popup.saveSearchButton.dataset.searchurl,
+    let url = notifier.popup.saveSearchButton.dataset.searchurl;
+    let newSearch = {};
+
+    newSearch[url] = {
         title: notifier.popup.saveSearchButton.dataset.defaulttitle,
-        newestPostTime: (new Date()).getTime(),
+        newestResultTime: (new Date()).getTime(),
+        newResults: [],
         type: "cl"
     };
 
-    chrome.storage.sync.get(["savedSearches"], function(res) {
-        res.savedSearches.push(newSearch);
-        chrome.storage.sync.set({
-            savedSearches: res.savedSearches
-        });
-        console.log(res.savedSearches);
+    chrome.storage.sync.set(newSearch, function() {
+        console.log("SAVED");
     });
 });
 

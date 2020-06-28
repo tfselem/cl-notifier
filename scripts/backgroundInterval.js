@@ -102,33 +102,43 @@ function ClPage(doc) {
 }
 
 function updateClSearch() {
-    const interval = 10000;
+    const interval = 5000;
     chrome.storage.sync.get(null, function(res) {
-        console.log(res);
+        let resLength = Object.keys(res).length,
+            i = 1;
 
-        if (res.savedSearches.length === 0) {
+        if (resLength === 0) {
             setTimeout(updateClSearch, interval);
         }
-
-        for (let i = 0; i < res.savedSearches.length; i++) {
+        console.log(res);
+        for (const url in res) {
             let xhr = new XMLHttpRequest(),
-                savedSearch = res.savedSearches[i];
+                savedSearch = res[url];
 
-            xhr.open("GET", savedSearch.url, true);
+            xhr.open("GET", url, true);
             xhr.responseType = "document";
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         let page = new ClPage(xhr.response),
+                            //currentResultTime = (new Date()).setTime(savedSearch.newestResultTime),
+                            currentResultTime = (Date.clParse("2020-06-26 12:00")),
+                            newestResultTime = page.getNewestResultDate(),
                             results = {};
-                        results[savedSearch.url] = page.getResultsAfterDate(
-                            Date.clParse("2020-06-24 12:00")
-                        );
+
+                        if (currentResultTime < newestResultTime) {
+                            savedSearch.newResults = savedSearch.newResults.concat(page.getResultsAfterDate(currentResultTime));
+                            savedSearch.newestResultTime = newestResultTime;
+                        }
+
+                        results[url] = savedSearch;
                         chrome.storage.sync.set(results);
                     }
 
-                    if (i === res.savedSearches.length-1) { 
+                    if (i === resLength) { 
                         setTimeout(updateClSearch, interval);
+                    } else {
+                        i++;
                     }
                 }
             }
@@ -141,7 +151,8 @@ function updateClSearch() {
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.clear(function() {
-        chrome.storage.sync.set({savedSearches: []}, updateClSearch);
+        updateClSearch();
+        //chrome.storage.sync.set({savedSearches: []}, updateClSearch);
     });
 });
 

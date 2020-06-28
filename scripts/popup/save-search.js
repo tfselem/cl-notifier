@@ -4,7 +4,8 @@ notifier.popup.saveSearchButton.addEventListener("click", function(e) {
 
     newSearch[url] = {
         title: notifier.popup.saveSearchButton.dataset.defaulttitle,
-        newestResultTime: (new Date()).getTime(),
+        //newestResultTime: (new Date()).getTime(),
+        newestResultTime: Date.clParse("2020-06-26 12:00").getTime(),
         newResults: [],
         type: "cl"
     };

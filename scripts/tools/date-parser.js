@@ -18,6 +18,7 @@ Date.clParse = function(str) {
         date.setHours(parseInt(match[4]));
         date.setMinutes(parseInt(match[5]));
         date.setSeconds(0);
+        date.setMilliseconds(0);
     } else {
         throw "invalid parameter";
     }

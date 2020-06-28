@@ -11,7 +11,7 @@ function ClResult(liResult) {
         this.price = liResult.getElementsByClassName("result-price")[0].innerText;
         this.date = Date.clParse(
             liResult.getElementsByTagName("time")[0].getAttribute("datetime")
-        );
+        ).getTime();
     } catch(e) {
         this.id = null;
         this.date = null;
@@ -121,14 +121,16 @@ function updateClSearch() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         let page = new ClPage(xhr.response),
-                            //currentResultTime = (new Date()).setTime(savedSearch.newestResultTime),
-                            currentResultTime = (Date.clParse("2020-06-26 12:00")),
+                            currentResultTime = new Date(),
                             newestResultTime = page.getNewestResultDate(),
                             results = {};
 
-                        if (currentResultTime < newestResultTime) {
+                        currentResultTime.setTime(savedSearch.newestResultTime);
+                        if (currentResultTime.getTime() < newestResultTime.getTime()) {
+                            console.log(currentResultTime);
+                            console.log(newestResultTime);
                             savedSearch.newResults = savedSearch.newResults.concat(page.getResultsAfterDate(currentResultTime));
-                            savedSearch.newestResultTime = newestResultTime;
+                            savedSearch.newestResultTime = newestResultTime.getTime();
                         }
 
                         results[url] = savedSearch;

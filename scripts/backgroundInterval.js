@@ -1,5 +1,5 @@
 /**
- * Parses a particular craigslist result HTMLString into
+ * Parses a particular craigslist 'li.result-row' HTMLString into
  * useful members: title, url, price, and date
  */
 function ClResult(liResult) {
@@ -58,7 +58,7 @@ function ClPage(doc) {
     /**
      * Parses the newest post date in the craigslist page.
      */
-    this.getNewestResultDate = function() {
+    this.getNewestResultTime = function() {
         try {
             return Date.clParse(this.getNewestUnparsedResultDate());
         } catch(e) {
@@ -86,7 +86,7 @@ function ClPage(doc) {
     /**
      * Gets posts after specified date
      */
-    this.getResultsAfterDate = function(currentDate) {
+    this.getResultsAfterTime = function(currentDate) {
         let localResults = this.getLocalResults(),
             results = [];
 
@@ -100,98 +100,55 @@ function ClPage(doc) {
     }
 }
 
-/*function updateClSearch() {
-    const interval = 5000;
-    chrome.storage.sync.get(null, function(res) {
-        let resLength = Object.keys(res).length,
-            i = 1;
-
-        if (resLength === 0) {
-            setTimeout(updateClSearch, interval);
-        }
-        console.log(res);
-        for (const url in res) {
-            let xhr = new XMLHttpRequest(),
-                savedSearch = res[url];
-
-            xhr.open("GET", url, true);
-            xhr.responseType = "document";
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        let page = new ClPage(xhr.response),
-                            currentResultTime = new Date(),
-                            newestResultTime = page.getNewestResultDate(),
-                            results = {};
-
-                        currentResultTime.setTime(savedSearch.newestResultTime);
-                        if (currentResultTime.getTime() < newestResultTime.getTime()) {
-                            console.log(currentResultTime);
-                            console.log(newestResultTime);
-                            savedSearch.newResults = savedSearch.newResults.concat(page.getResultsAfterDate(currentResultTime));
-                            savedSearch.newestResultTime = newestResultTime.getTime();
-                        }
-
-                        results[url] = savedSearch;
-                        chrome.storage.sync.set(results);
-                    }
-
-                    if (i === resLength) { 
-                        setTimeout(updateClSearch, interval);
-                    } else {
-                        i++;
-                    }
-                }
-            }
-
-            xhr.send();
-        }
-
-    });
-}*/
-
-function updateClSearch() {
+/**
+ * Recursive algorithm for updating search results
+ * */
+ClPage.updateResults = function() {
     const interval = 10000;
-
+    const maxNumResults = 30;
     chrome.storage.sync.get("savedSearches", function(res) {
         let updatedSearches = [],
             index = 0,
             indexMax = res.savedSearches.length;
-
+        /* Loop through function until there are saved searches */
         if (indexMax === 0) {
-            console.log("No saved searches");
-            setTimeout(updateClSearch, interval);
+            setTimeout(ClPage.updateResults, interval);
             return;
         }
 
+        /* Beginning of 'recursiveFunc', this will fetch individual
+         * urls from savedSearches array and perform an XHR on the 
+         * search page. The next value in savedSearches will be reached
+         * if and only if the request for the current XHR is complete and 
+         * all values have been updated in chrome.storage */
         (function() {
             if (index === indexMax) {
-                setTimeout(updateClSearch, interval);
+                setTimeout(ClPage.updateResults, interval);
                 return;
             }
-
             let recursiveFunc = arguments.callee,
                 url = res.savedSearches[index];
-
             chrome.storage.sync.get(url, function(res1) {
                 let xhr = new XMLHttpRequest();
                 xhr.responseType = "document";
                 xhr.open("GET", url, true);
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
-                        let page = new ClPage(xhr.response),
-                            newestResultTime = page.getNewestResultDate().getTime(),
-                            currentResultTime = new Date();
-                            currentResultTime.setTime(res1[url].newestResultTime);
-
-                        if (currentResultTime < newestResultTime) {
-                            res1[url].newestResultTime = newestResultTime;
-                            res1[url].newResults = page.getResultsAfterDate(currentResultTime).concat(
-                                res1[url].newResults
-                            );
-                            res1[url].newResults.splice(30, res1[url].newResults.length-30);
+                        if (xhr.status === 200) {
+                            let page = new ClPage(xhr.response),
+                                newestResultTime = page.getNewestResultTime().getTime(),
+                                currentResultTime = new Date();
+                                currentResultTime.setTime(res1[url].newestResultTime);
+                            if (currentResultTime < newestResultTime) {
+                                res1[url].newestResultTime = newestResultTime;
+                                res1[url].newResults = page.getResultsAfterTime(currentResultTime)
+                                                           .concat(res1[url].newResults);
+                                res1[url].newResults.splice(
+                                    maxNumResults, 
+                                    res1[url].newResults.length - maxNumResults
+                                );
+                            }
                         }
-
                         chrome.storage.sync.set(res1, function() {
                             console.log(res1);
                             index++;
@@ -201,18 +158,17 @@ function updateClSearch() {
                 }
                 xhr.send();
             });
-
-        })();
+        })(); /* End of 'recursiveFunc' */
     });
 }
 
+/* Event listeners */
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.clear(function() {
         chrome.storage.sync.set({savedSearches: []}, function() {
-            updateClSearch();
+            ClPage.updateResults();
         });
     });
 });
-
-chrome.runtime.onStartup.addListener(updateClSearch);
+chrome.runtime.onStartup.addListener(ClPage.updateResults);
 

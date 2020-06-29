@@ -1,78 +1,55 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <link type="text/css" rel="stylesheet" href="../style/style.css"/>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <!-- Popup css -->
+        <link rel="stylesheet" type="text/css" href="../style/style.css">
     </head>
     <body>
-        <div id="container">
-            <div id="no-saved-searches" hidden>
-                <p>
-                    You have no saved searches! Search for items on Facebook
-                    or Craigslist and try again.
-                </p>
-                <a href="http://craigslist.org">Craigslist</a>
-                <a href="http://facebook.com/marketplace">Facebook Markeplace</a>
+        <div class="container-fluid" id="main-container">
+            <div class="btn-group" role="group" aria-label="Save Search" id="save-search-wrapper">
+                <button type="button" id="save-search" class="btn btn-sm btn-primary" disabled>Save This Page</button>
+                <button type="button" id="update-searches" class="btn btn-sm btn-outline-secondary">Refresh</button>
             </div>
-        </div>
-        <div id="categories" hidden>
-            <p>Saved categories:</p>
-            <div class="category">
-                <button class="category-goto">Cool Car</button>
-                <button class="category-del">Remove category</button>
+            <div class="alert alert-info" id="invalid-url-wrapper">
+                Please go to a valid search page to save your search!
             </div>
-            <div class="category">
-                <button class="category-goto">Computer parts</button>
-                <button class="category-del">Remove category</button>
-            </div>
-        </div>
-        <div id="searches" >
-            <button id="back">Back to categories</button>
-            <div id="filter">
-                <span>Showing</span>
-                <button id="show-all">All</button>
-                <button id="show-cl">Craigslist</button>
-                <button id="show-fb">Facebook Marketplace</button>
-            </div>
-            <ul id="posts">
-                <li>
-                    <img src="" height=50 width=50/>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action">
                     <div>
-                        <a href="">Title of Post</a>
-                        <p>Some description of this post and...</p>
-                        <button class="goto-post">Go</button>
-                        <button class="clear-post">Clear</button>
+                        <a href="">Craigslist - Something or another</a> <span class="badge badge-success">21</span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 </li>
-                <li>
-                    <img src="" height=50 width=50/>
+                <li class="list-group-item list-group-item-action">
                     <div>
-                        <a href="">Title of Post</a>
-                        <p>Some description of this post and...</p>
-                        <button class="goto-post">Go</button>
-                        <button class="clear-post">Clear</button>
+                        <a href="">Craigslist - Jewelery</a> <span class="badge badge-success">7</span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 </li>
-                <li class="post">
-                    <img src="" height=50 width=50/>
+                <li class="list-group-item list-group-item-action">
                     <div>
-                        <a href="">Title of Post</a>
-                        <p>Some description of this post and...</p>
-                        <button class="goto-post">Go</button>
-                        <button class="clear-post">Clear</button>
+                        <a href="">Search page 1</a> <span class="badge badge-success">3</span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 </li>
             </ul>
         </div>
 
-        <div id="save-search-wrapper">
-            <button id="save-search" hidden>Save current search page</button>
-            <div id="invalid-url-wrapper">
-                Please go to a valid search page to save your search!
-            </div>
-        </div>
-
+        <!-- Javascript tools -->
         <script type="text/javascript" src="../scripts/tools/date-parser.js"></script>
-
+        <!-- Javascript popup -->
         <script type="text/javascript" src="../scripts/popup/notifier.js"></script>
         <script stype="text/javascript" src="../scripts/popup/valid-url.js"></script>
         <script stype="text/javascript" src="../scripts/popup/save-search.js"></script>

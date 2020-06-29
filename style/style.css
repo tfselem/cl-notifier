@@ -1,12 +1,16 @@
-#container {
+#main-container {
     display: block;
-    width: 350px;
+    width: 400px;
     height: auto;
     max-height: 400px;
+    padding: 1.0rem;
 }
 
-#posts li div,
-#posts li img {
-    display: inline-block;
+#invalid-url-wrapper {
+    margin-top: 10px;
+}
+
+.list-group {
+    margin: 10px 0;
 }
 

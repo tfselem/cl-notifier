@@ -15,7 +15,7 @@ chrome.tabs.query({
         }, function(res) {
             if (res && res.valid) {
                 notifier.popup.invalidUrlWrapper.setAttribute("hidden", "");
-                notifier.popup.saveSearchButton.removeAttribute("hidden");
+                notifier.popup.saveSearchButton.removeAttribute("disabled");
 
                 notifier.popup.saveSearchButton.setAttribute(
                     "data-searchurl", 

@@ -11,7 +11,7 @@
         <link rel="stylesheet" type="text/css" href="../style/style.css">
     </head>
     <body>
-        <div class="container-fluid" id="main-container">
+        <div class="container-fluid" id="container" data-view="default">
             <div class="btn-group" role="group" aria-label="Save Search" id="save-search-wrapper">
                 <button type="button" id="save-search" class="btn btn-sm btn-primary" disabled>Save This Page</button>
                 <button type="button" id="update-searches" class="btn btn-sm btn-outline-secondary">Refresh</button>
@@ -19,13 +19,17 @@
             <div class="alert alert-info" id="invalid-url-wrapper">
                 Please go to a valid search page to save your search!
             </div>
-            <ul class="list-group">
+            <ul class="list-group" id="saved-searches-container">
                 <li class="list-group-item list-group-item-action">
                     <div>
                         <a href="">Craigslist - Something or another</a> <span class="badge badge-success">21</span>
                         <button type="button" class="close" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
+                    </div>
+                    <div>
+                        <span class="badge badge-pill badge-primary btn">Visit</span>
+                        <span class="badge badge-pill badge-secondary btn">Clear All</span>
                     </div>
                 </li>
                 <li class="list-group-item list-group-item-action">
@@ -35,6 +39,10 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <div>
+                        <span class="badge badge-pill badge-primary btn">Visit</span>
+                        <span class="badge badge-pill badge-secondary btn">Clear All</span>
+                    </div>
                 </li>
                 <li class="list-group-item list-group-item-action">
                     <div>
@@ -43,13 +51,23 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <div>
+                        <span class="badge badge-pill badge-primary btn">Visit</span>
+                        <span class="badge badge-pill badge-secondary btn">Clear All</span>
+                    </div>
                 </li>
             </ul>
         </div>
 
-        <!-- Javascript tools -->
+        <!-- Bootstrap 
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        -->
+        <!-- Tools -->
         <script type="text/javascript" src="../scripts/tools/date-parser.js"></script>
         <!-- Javascript popup -->
+        <script stype="text/javascript" src="../scripts/popup/saved-searches-view.js"></script>
         <script type="text/javascript" src="../scripts/popup/notifier.js"></script>
         <script stype="text/javascript" src="../scripts/popup/valid-url.js"></script>
         <script stype="text/javascript" src="../scripts/popup/save-search.js"></script>

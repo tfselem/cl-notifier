@@ -5,8 +5,8 @@
     "background": {
         "scripts": [
             "scripts/tools/date-parser.js",
-            "scripts/backgroundInstall.js",
-            "scripts/backgroundInterval.js"
+            "scripts/tools/cl-page.js",
+            "scripts/backgroundEvents.js"
         ],
         "persistent": false
     },
@@ -26,6 +26,7 @@
     ],
     "permissions": [
         "tabs",
+        "alarms",
         "storage",
         "http://*.craigslist.org/",
         "https://*.craigslist.org/"

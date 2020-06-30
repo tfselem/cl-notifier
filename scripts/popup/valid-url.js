@@ -14,14 +14,16 @@ chrome.tabs.query({
             site: "cl"
         }, function(res) {
             if (res && res.valid) {
+                /* Hide invalid url notification */
                 notifier.popup.invalidUrlWrapper.setAttribute("hidden", "");
+                /* Allow user to click save search button */
                 notifier.popup.saveSearchButton.removeAttribute("disabled");
 
+                /* Store url, and title data in button dataset attributes */
                 notifier.popup.saveSearchButton.setAttribute(
                     "data-searchurl", 
                     res.href
                 );
-
                 notifier.popup.saveSearchButton.setAttribute(
                     "data-defaulttitle", 
                     res.defaultTitle

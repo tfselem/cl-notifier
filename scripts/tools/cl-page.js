@@ -101,74 +101,61 @@ function ClPage(doc) {
 }
 
 /**
- * Recursive algorithm for updating search results
+ * Updates a single saved search page given its key (url)
  * */
-ClPage.updateResults = function() {
-    const interval = 10000;
+ClPage.updateSearchPage = function(url) {
     const maxNumResults = 30;
-    chrome.storage.sync.get("savedSearches", function(res) {
-        let updatedSearches = [],
-            index = 0,
-            indexMax = res.savedSearches.length;
-        /* Loop through function until there are saved searches */
-        if (indexMax === 0) {
-            setTimeout(ClPage.updateResults, interval);
-            return;
-        }
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = "document";
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                chrome.storage.sync.get(url, function(res) {
+                    let page = new ClPage(xhr.response),
+                        newestResultTime = page.getNewestResultTime() ? page.getNewestResultTime().getTime() : 0,
+                        currentResultTime = new Date();
+                        currentResultTime.setTime(res[url].newestResultTime);
 
-        /* Beginning of 'recursiveFunc', this will fetch individual
-         * urls from savedSearches array and perform an XHR on the 
-         * search page. The next value in savedSearches will be reached
-         * if and only if the request for the current XHR is complete and 
-         * all values have been updated in chrome.storage */
-        (function() {
-            if (index === indexMax) {
-                setTimeout(ClPage.updateResults, interval);
-                return;
-            }
-            let recursiveFunc = arguments.callee,
-                url = res.savedSearches[index];
-            chrome.storage.sync.get(url, function(res1) {
-                let xhr = new XMLHttpRequest();
-                xhr.responseType = "document";
-                xhr.open("GET", url, true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            let page = new ClPage(xhr.response),
-                                newestResultTime = page.getNewestResultTime().getTime(),
-                                currentResultTime = new Date();
-                                currentResultTime.setTime(res1[url].newestResultTime);
-                            if (currentResultTime < newestResultTime) {
-                                res1[url].newestResultTime = newestResultTime;
-                                res1[url].newResults = page.getResultsAfterTime(currentResultTime)
-                                                           .concat(res1[url].newResults);
-                                res1[url].newResults.splice(
-                                    maxNumResults, 
-                                    res1[url].newResults.length - maxNumResults
-                                );
-                            }
-                        }
-                        chrome.storage.sync.set(res1, function() {
-                            console.log(res1);
-                            index++;
-                            recursiveFunc();
-                        });
+                    if (currentResultTime < newestResultTime) {
+                        res[url].newestResultTime = newestResultTime;
+                        res[url].newResults = page.getResultsAfterTime(currentResultTime)
+                                                   .concat(res[url].newResults);
+                        res[url].newResults.splice(
+                            maxNumResults, 
+                            res[url].newResults.length - maxNumResults
+                        );
                     }
-                }
-                xhr.send();
-            });
-        })(); /* End of 'recursiveFunc' */
-    });
+
+                    chrome.storage.sync.set(res, function() {
+                        console.log(res);
+                    });
+
+                });
+            } else {
+                console.log("Status: " + xhr.status);
+            }
+        }
+    }
+    xhr.send();
 }
 
-/* Event listeners */
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.clear(function() {
-        chrome.storage.sync.set({savedSearches: []}, function() {
-            ClPage.updateResults();
-        });
+/**
+ * Loops through savedSearches array in chrome.storage 
+ * and checks for updates on all search pages
+ * */
+ClPage.updateAllSearchPages = function(alarm) {
+    const maxNumResults = 30;
+    console.log(alarm);
+    chrome.storage.sync.get("savedSearches", function(res) {
+        if (res.savedSearches.length === 0) {
+            console.log("No saved searches");
+            return;
+        }
+        for (let i = 0; i < res.savedSearches.length; i++) {
+            let url = res.savedSearches[i];
+            ClPage.updateSearchPage(url);
+        }
     });
-});
-chrome.runtime.onStartup.addListener(ClPage.updateResults);
+}
 

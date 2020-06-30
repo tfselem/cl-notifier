@@ -103,7 +103,7 @@ function ClPage(doc) {
 /**
  * Updates a single saved search page given its key (url)
  * */
-ClPage.updateSearchPage = function(url) {
+ClPage.updateSearchPage = function(url, onUpdate = function() {}) {
     const maxNumResults = 30;
     let xhr = new XMLHttpRequest();
     xhr.responseType = "document";
@@ -128,6 +128,7 @@ ClPage.updateSearchPage = function(url) {
                     }
 
                     chrome.storage.sync.set(res, function() {
+                        onUpdate();
                         console.log(res);
                     });
 

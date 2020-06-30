@@ -1,3 +1,6 @@
+const interval = 1.0;
+const updateAlarmName = "update-search-pages";
+
 chrome.runtime.onInstalled.addListener(function() {
     chrome.tabs.query({
         url: [
@@ -14,14 +17,20 @@ chrome.runtime.onInstalled.addListener(function() {
 
     chrome.storage.sync.clear(function() {
         chrome.storage.sync.set({savedSearches: []}, function() {
-            const interval = 1.0;
-            chrome.alarms.create({periodInMinutes: interval});
+            chrome.alarms.clearAll(function() {
+                chrome.alarms.create(updateAlarmName, {
+                    periodInMinutes: interval
+                });
+            })
         });
     });
 });
 
 chrome.runtime.onStartup.addListener(function() {
-    chrome.alarms.create({periodInMinutes: interval});
+    chrome.alarms.create({
+        name: updateAlarmName,
+        periodInMinutes: interval
+    });
 });
 
 // This one does the heavy lifting

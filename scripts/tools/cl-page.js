@@ -8,11 +8,14 @@ function ClResult(liResult) {
         this.id = parseInt(liResult.dataset.pid);
         this.title = titleAnchor.innerText;
         this.url = titleAnchor.getAttribute("href");
-        this.price = liResult.getElementsByClassName("result-price")[0].innerText;
+        this.price = liResult.getElementsByClassName("result-price")[0]
+                    ? liResult.getElementsByClassName("result-price")[0].innerText 
+                    : null;
         this.date = Date.clParse(
             liResult.getElementsByTagName("time")[0].getAttribute("datetime")
         ).getTime();
     } catch(e) {
+        console.log(e);
         this.id = null;
         this.date = null;
         this.title = null;

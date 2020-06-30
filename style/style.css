@@ -13,3 +13,38 @@
     margin: 10px 0;
 }
 
+.list-group-item-action::hover {
+    cursor: pointer;
+}
+
+.results-container div {
+    margin-bottom: 20px;
+}
+
+.num-results {
+    margin-top: 4px;
+}
+
+.results-container div:last-child {
+    margin-bottom: 0;
+}
+
+.result-img {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+}
+
+.result-title {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.result-remove {
+    margin-top: 7px;
+}
+
+.show-results.active {
+    background-color: lightgray;
+}
+

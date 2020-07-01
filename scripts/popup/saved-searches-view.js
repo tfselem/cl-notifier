@@ -22,7 +22,7 @@ PopupView.updateView = function() {
 }
 
 PopupView.createSavedSearchItem = function(title, index, url, newResults) {
-    title = title.slice(0, 30) + "...";
+    title = title.slice(0, 40) + "...";
     let element = '<a href="#search-id-'+index+'" class="list-group-item list-group-item-action show-results">'
                 + title + ' <span class="float-right badge badge-primary num-results">'+newResults.length+'</span>'
                 + '</a>'
@@ -39,7 +39,7 @@ PopupView.createSavedSearchItem = function(title, index, url, newResults) {
 }
 
 PopupView.createResultItem = function(url, date, price, title) {
-    title = title.slice(0, 20) + "...";
+    title = title.slice(0, 25) + "...";
     let element = '<div>'
                 + '<img src="#" class="img-thumbnail result-img" alt="title">'
                 + '<h6 class="result-title"><a href="'+url+'">'+title+'</a></h6>'
@@ -66,13 +66,15 @@ function showResults(selector) {
 PopupView.updateView();
 
 window.addEventListener("click", function(e) {
+    let activeClass = "active";
+    e.preventDefault();
     if (e.target.nodeName === "A" && e.target.classList.contains("show-results")) {
-        if (e.target.classList.contains("active")) {
+        if (e.target.classList.contains(activeClass)) {
             hideAllResults();
-            e.target.classList.remove("active");
+            e.target.classList.remove(activeClass);
         } else {
             showResults(e.target.getAttribute("href"));
-            e.target.classList.add("active");
+            e.target.classList.add(activeClass);
         }
     }
 });

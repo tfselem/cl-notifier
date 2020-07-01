@@ -45,6 +45,7 @@
 }
 
 .show-results.active {
-    background-color: lightgray;
+    background-color: #f9f9f9;
+    border-color: lightgray;
 }
 

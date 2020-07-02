@@ -9,12 +9,12 @@ function ClResult(liResult) {
         this.title = titleAnchor.innerText;
         this.url = titleAnchor.getAttribute("href");
         this.price = liResult.getElementsByClassName("result-price")[0]
-                    ? liResult.getElementsByClassName("result-price")[0].innerText 
-                    : null;
+            ? liResult.getElementsByClassName("result-price")[0].innerText
+            : null;
         this.date = Date.clParse(
             liResult.getElementsByTagName("time")[0].getAttribute("datetime")
         ).getTime();
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         this.id = null;
         this.date = null;
@@ -22,7 +22,7 @@ function ClResult(liResult) {
         this.url = null;
         this.price = null;
     }
-    this.toObject = function() {
+    this.toObject = function () {
         return {
             id: this.id,
             title: this.title,
@@ -49,7 +49,7 @@ function ClPage(doc) {
      * 'doc' craigslist page. Contingent on sort=date for 
      * the search page.
      */
-    this.getNewestUnparsedResultDate = function() {
+    this.getNewestUnparsedResultDate = function () {
         let firstResult = this.resultsRows.firstElementChild,
             firstResultTime = firstResult ? firstResult.getElementsByTagName("time") : null;
         if (firstResult.tagName !== "LI" || !firstResultTime[0]) { /* No posts */
@@ -61,10 +61,10 @@ function ClPage(doc) {
     /**
      * Parses the newest post date in the craigslist page.
      */
-    this.getNewestResultTime = function() {
+    this.getNewestResultTime = function () {
         try {
             return Date.clParse(this.getNewestUnparsedResultDate());
-        } catch(e) {
+        } catch (e) {
             return null;
         }
     }
@@ -75,7 +75,7 @@ function ClPage(doc) {
      * 
      * Returns an array of HTMLString objects
      */
-    this.getLocalResults = function() {
+    this.getLocalResults = function () {
         let localResults = [];
         for (let i = 0; i < this.resultsRows.children.length; i++) {
             if (this.resultsRows.children[i].tagName === "H4") {
@@ -89,7 +89,7 @@ function ClPage(doc) {
     /**
      * Gets posts after specified date
      */
-    this.getResultsAfterTime = function(currentDate) {
+    this.getResultsAfterTime = function (currentDate) {
         let localResults = this.getLocalResults(),
             results = [];
 
@@ -106,31 +106,31 @@ function ClPage(doc) {
 /**
  * Updates a single saved search page given its key (url)
  * */
-ClPage.updateSearchPage = function(url, onUpdate = function() {}) {
+ClPage.updateSearchPage = function (url, onUpdate = function () { }) {
     const maxNumResults = 30;
     let xhr = new XMLHttpRequest();
     xhr.responseType = "document";
     xhr.open("GET", url, true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                chrome.storage.sync.get(url, function(res) {
+                chrome.storage.sync.get(url, function (res) {
                     let page = new ClPage(xhr.response),
                         newestResultTime = page.getNewestResultTime() ? page.getNewestResultTime().getTime() : 0,
                         currentResultTime = new Date();
-                        currentResultTime.setTime(res[url].newestResultTime);
+                    currentResultTime.setTime(res[url].newestResultTime);
 
                     if (currentResultTime < newestResultTime) {
                         res[url].newestResultTime = newestResultTime;
                         res[url].newResults = page.getResultsAfterTime(currentResultTime)
-                                                   .concat(res[url].newResults);
+                            .concat(res[url].newResults);
                         res[url].newResults.splice(
-                            maxNumResults, 
+                            maxNumResults,
                             res[url].newResults.length - maxNumResults
                         );
                     }
 
-                    chrome.storage.sync.set(res, function() {
+                    chrome.storage.sync.set(res, function () {
                         onUpdate();
                         console.log(res);
                     });
@@ -148,10 +148,9 @@ ClPage.updateSearchPage = function(url, onUpdate = function() {}) {
  * Loops through savedSearches array in chrome.storage 
  * and checks for updates on all search pages
  * */
-ClPage.updateAllSearchPages = function(alarm) {
-    const maxNumResults = 30;
+ClPage.updateAllSearchPages = function (alarm) {
     console.log(alarm);
-    chrome.storage.sync.get("savedSearches", function(res) {
+    chrome.storage.sync.get("savedSearches", function (res) {
         if (res.savedSearches.length === 0) {
             console.log("No saved searches");
             return;

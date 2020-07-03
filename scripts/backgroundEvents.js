@@ -27,12 +27,11 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 chrome.runtime.onStartup.addListener(function() {
-    chrome.alarms.create({
-        name: updateAlarmName,
+    chrome.alarms.create(updateAlarmName, {
         periodInMinutes: interval
     });
 });
 
 // This one does the heavy lifting
-chrome.alarms.onAlarm.addListener(ClPage.updateAllSearchPages);
+chrome.alarms.onAlarm.addListener(ClPage.updateAllSearchPagesFromXHR);
 

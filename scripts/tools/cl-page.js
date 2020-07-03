@@ -135,7 +135,7 @@ class ClPage {
      * Loops through savedSearches array in chrome.storage
      * and checks for updates on all search pages
      * */
-    static updateAllSearchPages(alarm) {
+    static updateAllSearchPagesFromXHR(alarm) {
         console.log(alarm);
         chrome.storage.sync.get("savedSearches", function (res) {
             if (res.savedSearches.length === 0) {

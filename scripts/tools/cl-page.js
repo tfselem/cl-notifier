@@ -6,12 +6,14 @@ class ClResult {
     constructor(liResult) {
         let titleAnchor = liResult.getElementsByClassName("result-title")[0];
 
-        this.id = parseInt(liResult.dataset.pid);
         this.title = titleAnchor.innerText;
         this.url = titleAnchor.getAttribute("href");
-        this.price = liResult.getElementsByClassName("result-price")[0]
-            ? liResult.getElementsByClassName("result-price")[0].innerText
-            : null;
+
+        /* some posts don't have price tags */
+        if (priceElement = liResult.getElementsByClassName("result-price")) {
+            this.price = priceElement[0].innerText;
+        }
+
         this.date = Date.clParse(
             liResult.getElementsByTagName("time")[0].getAttribute("datetime")
         ).getTime();
@@ -19,10 +21,9 @@ class ClResult {
 
     toObject() {
         return {
-            id: this.id,
             title: this.title,
             url: this.url,
-            price: this.price,
+            price: this.price || null,
             date: this.date
         };
     };
@@ -30,9 +31,7 @@ class ClResult {
 
 /**
  * Helps parse a craigslist search page.
- * 
- * Constructor acceptes an HTMLString, could be a document from the current page
- * or an XHR document type response
+ * Constructor expects an HTMLString from an XHR request response.
  * */
 class ClPage {
     constructor(doc) {
@@ -45,25 +44,13 @@ class ClPage {
      * 'doc' craigslist page. Contingent on sort=date for
      * the search page.
      */
-    getNewestUnparsedResultDate() {
+    getNewestResultTime() {
         let firstResult = this.resultsRows.firstElementChild,
             firstResultTime = firstResult ? firstResult.getElementsByTagName("time") : null;
-        if (firstResult.tagName !== "LI" || !firstResultTime[0]) { /* No posts */
+        if (firstResult === null || firstResult.tagName !== "LI" || firstResultTime[0] === undefined) {
             return null;
         }
-        return firstResultTime[0].getAttribute("datetime");
-    }
-
-    /**
-     * Parses the newest post date in the craigslist page.
-     */
-    getNewestResultTime() {
-        try {
-            return Date.clParse(this.getNewestUnparsedResultDate());
-        }
-        catch (e) {
-            return null;
-        }
+        return Date.clParse(firstResultTime[0].getAttribute("datetime"));
     }
 
     /**

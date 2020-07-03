@@ -4,26 +4,20 @@
  */
 class ClResult {
     constructor(liResult) {
-        let titleAnchor = liResult.getElementsByClassName("result-title")[0];
+        let titleAnchor = liResult.getElementsByClassName("result-title")[0],
+            priceElement = liResult.getElementsByClassName("result-price")[0],
+            timeElement = liResult.getElementsByTagName("time")[0];
 
-        this.title = titleAnchor.innerText;
-        this.url = titleAnchor.getAttribute("href");
-
-        /* some posts don't have price tags */
-        if (priceElement = liResult.getElementsByClassName("result-price")) {
-            this.price = priceElement[0].innerText;
-        }
-
-        this.date = Date.clParse(
-            liResult.getElementsByTagName("time")[0].getAttribute("datetime")
-        ).getTime();
+        this.title = titleAnchor ? titleAnchor.innerText : "Unlisted";
+        this.price = priceElement ? priceElement.innerText : "No Price Available";
+        this.date = timeElement ? Date.clParse(timeElement.getAttribute("datetime")).getTime() : Date.now();
     }
 
     toObject() {
         return {
             title: this.title,
             url: this.url,
-            price: this.price || null,
+            price: this.price,
             date: this.date
         };
     };
@@ -87,38 +81,47 @@ class ClPage {
     }
 
     /**
+     * Updates a single search page based on DOM from current object
+     * @param {string} url Key in chrome.storage to be updated
+     * @param {function} onUpdate Callback function for when update is compelete
+     */
+    updateSearchPage(url, onUpdate = function () { }) {
+        const maxNumResults = 30;
+        let clpage = this;
+        chrome.storage.sync.get(url, function (res) {
+            let newestResultTime = clpage.getNewestResultTime() ? clpage.getNewestResultTime().getTime() : 0,
+                currentResultTime = new Date();
+            currentResultTime.setTime(res[url].newestResultTime);
+
+            if (currentResultTime < newestResultTime) {
+                res[url].newestResultTime = newestResultTime;
+                res[url].newResults = clpage.getResultsAfterTime(currentResultTime)
+                                      .concat(res[url].newResults);
+                res[url].newResults.splice(
+                    maxNumResults,
+                    res[url].newResults.length - maxNumResults
+                );
+            }
+
+            chrome.storage.sync.set(res, function () {
+                onUpdate();
+                console.log(res);
+            });
+        });
+    }
+
+    /**
      * Updates a single saved search page given its key (url)
      * */
-    static updateSearchPage(url, onUpdate = function () { }) {
-        const maxNumResults = 30;
+    static updateSearchPageFromXHR(url, onUpdate = function () { }) {
         let xhr = new XMLHttpRequest();
         xhr.responseType = "document";
         xhr.open("GET", url, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    chrome.storage.sync.get(url, function (res) {
-                        let page = new ClPage(xhr.response),
-                            newestResultTime = page.getNewestResultTime() ? page.getNewestResultTime().getTime() : 0,
-                            currentResultTime = new Date();
-                        currentResultTime.setTime(res[url].newestResultTime);
-
-                        if (currentResultTime < newestResultTime) {
-                            res[url].newestResultTime = newestResultTime;
-                            res[url].newResults = page.getResultsAfterTime(currentResultTime)
-                                .concat(res[url].newResults);
-                            res[url].newResults.splice(
-                                maxNumResults,
-                                res[url].newResults.length - maxNumResults
-                            );
-                        }
-
-                        chrome.storage.sync.set(res, function () {
-                            onUpdate();
-                            console.log(res);
-                        });
-
-                    });
+                    let page = new ClPage(xhr.response);
+                    page.updateSearchPage(url, onUpdate);
                 }
                 else {
                     console.log("Status: " + xhr.status);
@@ -127,6 +130,7 @@ class ClPage {
         };
         xhr.send();
     }
+
     /**
      * Loops through savedSearches array in chrome.storage
      * and checks for updates on all search pages
@@ -140,7 +144,7 @@ class ClPage {
             }
             for (let i = 0; i < res.savedSearches.length; i++) {
                 let url = res.savedSearches[i];
-                ClPage.updateSearchPage(url);
+                ClPage.updateSearchPageFromXHR(url);
             }
         });
     }

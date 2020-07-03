@@ -16,7 +16,7 @@ notifier.popup.saveSearchButton.addEventListener("click", function(e) {
             res.savedSearches.push(url);
             newSearch.savedSearches = res.savedSearches;
             chrome.storage.sync.set(newSearch, function() {
-                ClPage.updateSearchPage(url, function() {
+                ClPage.updateSearchPageFromXHR(url, function() {
                     PopupView.updateView();
                 });
             });
